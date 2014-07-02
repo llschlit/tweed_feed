@@ -152,7 +152,7 @@ input {
   height: auto !important;
 }
 
-#error_explanation {
+.error_explanation {
   color: #f00;
   ul {
     list-style: none;
