@@ -3,9 +3,24 @@
   <aside class="span4">
     <section>
       <h1>
-	<%= gravatar_for @user, size: 40 %>
-	<%= @user.name %>
+	<%= gravatar_for @user %>
+	<%= "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" %>
       </h1>
     </section>
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
   </aside>
+  <div class="span8">
+    <%= render 'follow_form' if signed_in? %>
+    <% if @user.microposts.any? %>
+      <h3>Feed of Tweeds (<%= @user.microposts.count %>)</h3>
+      <ol class="microposts">
+	<%= render @microposts %>
+      </ol>
+      <%= will_paginate @microposts %>
+    <% else %>
+      <p>No tweeds yet!  Go to your <%= link_to "homepage", root_path %> to weigh in.</p>
+    <% end %>
+  </div>
 </div>

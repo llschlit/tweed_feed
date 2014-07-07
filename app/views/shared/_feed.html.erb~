@@ -3,4 +3,11 @@
     <%= render partial: 'shared/feed_item', collection: @feed_items %>
   </ol>
   <%= will_paginate @feed_items %>
+<% else %>
+  <p>Vacant tweed feed :(</p>
+  <p>Want some tweeds?  You can</p>
+  <ul>
+    <li>Write your first tweed in the box on the left</li>
+    <li>Go to the <%= link_to "Users", users_path %> index to find other tweeders to follow!</li>
+  </ul>
 <% end %>

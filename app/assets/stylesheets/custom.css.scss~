@@ -18,6 +18,7 @@ html {
 }
 body {
   padding-top: 60px;
+
 }
 section {
   overflow: auto;
@@ -34,6 +35,9 @@ textarea {
 a:hover {
   color: turquoise;
   text-decoration: none;
+}
+ul {
+  list-style: none;
 }
 
 /* header */
@@ -155,6 +159,10 @@ aside {
     &:first-child {
       padding-left: 0;
       border: 0;
+    }
+    &:hover {
+      text-decoration: none;
+      color: turquoise;
     }
   }
   strong {
