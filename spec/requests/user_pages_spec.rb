@@ -24,7 +24,8 @@ describe "User Pages" do
       it "should list each user" do
         User.paginate(page: 1).each do |user|
 	  expect(page).to have_selector('li', text: user.name)
-        end # end paginate page 1
+        end
+
       end # end should list each user
     end #end pagination
 
@@ -45,8 +46,11 @@ describe "User Pages" do
 	    click_link('delete', match: :first)
 	  end.to change(User, :count).by(-1)
 	end # end should be able to delete another user
+
 	it { should_not have_link('delete', href: user_path(admin)) }
+
       end # end as an admin user
+
     end # end delete links
 
   end # end index
@@ -64,15 +68,65 @@ describe "User Pages" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
-    end
-  end
+    end # end microposts
+
+    describe "follow/unfollow buttons" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+
+      describe "following a user" do
+	before { visit user_path(other_user) }
+
+	it "should increment the followed user count" do
+	  expect do
+	    click_button "Follow"
+	  end.to change(user.followed_users, :count).by(1)
+	end # end should increment the followed user count
+
+	it "should increment the other user's followers count" do
+	  expect do
+	    click_button "Follow"
+	  end.to change(other_user.followers, :count).by(1)
+	end # end should increment the other user's followers count
+
+	describe "toggling the button" do
+	  before { click_button "Follow" }
+	  it { should have_xpath("//input[@value='Unfollow']") }
+	end # end toggling the button
+      end # end following a user
+
+      describe "unfollowing a user" do
+	before do
+	  user.follow!(other_user)
+	  visit user_path(other_user)
+	end
+
+	it "should decrement the followed user count" do
+	  expect do
+	    click_button "Unfollow"
+	  end.to change(user.followed_users, :count).by(-1)
+	end # end should decrement the followed user count
+
+	it "should decrement the other user's followers count" do
+	  expect do
+	    click_button "Unfollow"
+	  end.to change(other_user.followers, :count).by(-1)
+	end # end should decrement the other user's followers count
+
+	describe "toggling the button" do
+	  before { click_button "Unfollow" }
+	  it { should have_xpath("//input[@value='Follow']") }
+	end # end toggling the button
+      end # end unfollowing a user
+    end # end follow/unfollow buttons
+  end # end profile page
 
   describe "signup page" do
     before { visit signup_path }
 
     it { should have_content('Sign Up') }
     it { should have_title(full_title('Sign Up')) }
-  end
+  end # end signup page
 
   describe "signup" do
     before { visit signup_path }
@@ -82,13 +136,14 @@ describe "User Pages" do
     describe "with invalid information" do
       it "should not create a user" do
         expect { click_button submit }.not_to change(User, :count)
-      end
+      end # end should not create user
+
       describe "after submission" do
 	before { click_button submit }
 	it { should have_title('Sign Up') }
 	it { should have_content('error') }
-      end
-    end
+      end # end after submission
+    end # end with invalid information
 
     describe "with valid information" do
       before do
@@ -100,7 +155,7 @@ describe "User Pages" do
 
       it "should create a user" do
 	expect { click_button submit }.to change(User, :count).by(1)
-      end
+      end # end should create user
 
       describe "after saving the user" do
 	before { click_button submit }
@@ -109,10 +164,10 @@ describe "User Pages" do
 	it { should have_link('Sign out') }
 	it { should have_title(user.name) }
 	it { should have_selector('div.alert.alert-success', text: 'Welcome') }
-      end
+      end # end after saving the user
 
-    end # end describe with valid information
-  end # end describe signup
+    end # end with valid information
+  end # end signup
 
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
@@ -125,7 +180,7 @@ describe "User Pages" do
       it { should have_content("Update your profile") }
       it { should have_title("Edit user") }
       it { should have_link('Change', href: 'http://gravatar.com/emails') }
-    end
+    end # end page
 
     describe "with invalid information" do
       before { click_button "Save changes" }
@@ -165,5 +220,34 @@ describe "User Pages" do
     end # end forbidden attributes
 
   end #end edit
+  
+  describe "following/followers" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    before { user.follow!(other_user) }
+
+    describe "followed user" do
+      before do
+	sign_in user
+	visit following_user_path(user)
+      end
+
+      it { should have_title(full_title('Following')) }
+      it { should have_selector('h3', text: 'Following') }
+      it { should have_link(other_user.name, href: user_path(other_user)) }
+    end # end followed user
+
+    describe "followers" do
+      before do
+	sign_in other_user
+	visit followers_user_path(other_user)
+      end
+
+      it { should have_title(full_title('Followers')) }
+      it { should have_selector('h3', text: 'Followers') }
+      it { should have_link(user.name, href: user_path(user)) }
+    end # end followers
+
+  end # end following/followers
 
 end # end User pages 
