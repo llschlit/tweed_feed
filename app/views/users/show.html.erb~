@@ -4,7 +4,7 @@
     <section>
       <h1>
 	<%= gravatar_for @user %>
-	<%= "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" %>
+	<%= wrap(@user.name) %>
       </h1>
     </section>
     <section>
@@ -20,7 +20,10 @@
       </ol>
       <%= will_paginate @microposts %>
     <% else %>
-      <p>No tweeds yet!  Go to your <%= link_to "homepage", root_path %> to weigh in.</p>
+      <% if current_user?(@user) %>
+        <p>No tweeds yet!  Go to your <%= link_to "homepage", root_path %> to weigh in.</p>
+      <% else %>
+        <p>...silence.  Don't follow this user, they're boring.</p>
     <% end %>
   </div>
 </div>
