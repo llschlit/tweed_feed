@@ -31,6 +31,10 @@ textarea {
     margin-bottom: 10px;
   }
 }
+a:hover {
+  color: turquoise;
+  text-decoration: none;
+}
 
 /* header */
 
@@ -154,7 +158,7 @@ aside {
     }
     &:hover {
       text-decoration: none;
-      color: $blue;
+      color: turquoise;
     }
   }
   strong {

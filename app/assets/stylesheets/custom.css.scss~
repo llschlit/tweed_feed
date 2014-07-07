@@ -31,6 +31,10 @@ textarea {
     margin-bottom: 10px;
   }
 }
+a:hover {
+  color: turquoise;
+  text-decoration: none;
+}
 
 /* header */
 
@@ -147,14 +151,10 @@ aside {
     float: left;
     padding: 0 10px;
     color: gray;
-/*  border-left: 1px solid $lightGray; */
+    border-left: 1px solid $lightGray;
     &:first-child {
       padding-left: 0;
       border: 0;
-    }
-    &:hover {
-      text-decoration: none;
-      color: $blue;
     }
   }
   strong {
